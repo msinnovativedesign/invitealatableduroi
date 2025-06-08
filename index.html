@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ma Lecture du Jour - À la table du ROI</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!-- La navbar sera chargée ici par JavaScript -->
+
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Bienvenue à la table du ROI</h1>
+      <p class="subtitle">Nourrissez votre esprit chaque jour</p>
+      <div class="verse-of-the-day">
+        <h2><i class="fas fa-bible"></i> Verset du jour</h2>
+        <div id="daily-verse">"Je suis le pain vivant qui est descendu du ciel." - Jean 6:51</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-container">
+    <h2 class="section-title">Explorez nos ressources spirituelles</h2>
+    <div class="features-grid">
+      <a href="pain-quotidien.html" class="feature-card">
+        <i class="fas fa-bread-slice"></i>
+        <h3>Le Pain Quotidien</h3>
+        <p>Votre lecture et méditation quotidienne</p>
+      </a>
+      
+      <a href="adoration.html" class="feature-card">
+        <i class="fas fa-hands-praying"></i>
+        <h3>Adorations</h3>
+        <p>Moments de communion spirituelle</p>
+      </a>
+      
+      <a href="calendrier.html" class="feature-card">
+        <i class="fas fa-calendar-alt"></i>
+        <h3>Calendrier</h3>
+        <p>Événements à venir</p>
+      </a>
+      
+      <a href="louange.html" class="feature-card">
+        <i class="fas fa-music"></i>
+        <h3>Louange</h3>
+        <p>Vidéos et musiques inspirantes</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="daily-devotional">
+    <h2 class="section-title"><i class="fas fa-book-open"></i> Méditation du jour</h2>
+    <div class="devotional-content">
+      <h3 id="daily-title">Chargement de la lecture...</h3>
+      <div id="daily-content">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Préparation de votre nourriture spirituelle...</p>
+        </div>
+      </div>
+      <button id="share-button" class="share-btn">
+        <i class="fas fa-share-alt"></i> Partager
+      </button>
+    </div>
+  </div>
+
+
+
+<style>
+/* Ajoutez ceci à votre CSS */
+.admin-link {
+  color: #e74c3c !important; /* Rouge pour distinction */
+  font-size: 1rem !important;
+  margin-left: 15px;
+}
+
+.admin-link:hover {
+  color: #c0392b !important;
+}
+</style>
+
+  <script src="script.js"></script>
+  <script>
+
+
+    // Exemple de fonction pour partager le contenu
+    document.getElementById('share-button').addEventListener('click', function() {
+      if (navigator.share) {
+        navigator.share({
+          title: document.getElementById('daily-title').innerText,
+          text: 'Découvrez la méditation du jour:',
+          url: window.location.href
+        }).catch(err => {
+          console.log('Erreur de partage:', err);
+        });
+      } else {
+        // Fallback pour les navigateurs qui ne supportent pas l'API Web Share
+        alert('Fonction de partage non disponible. Copiez le lien manuellement.');
+      }
+    });
+  </script>
+  <script>
+  // Fonction pour charger les composants
+  function loadComponents() {
+    // Charge la navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('afterbegin', data);
+        // Après chargement du menu, charge le footer
+        return fetch('footer.html');
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('beforeend', data);
+      })
+      .catch(error => {
+        console.error('Erreur de chargement des composants:', error);
+        document.body.innerHTML += '<p style="color:red">Erreur de chargement des éléments</p>';
+      });
+  }
+
+  // Appel initial
+  document.addEventListener('DOMContentLoaded', loadComponents);
+</script>
+</body>
+</html>

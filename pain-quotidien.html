@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Le Pain Quotidien</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+
+  <div class="container">
+    <h2>Le Pain Quotidien</h2>
+    <p>Lecture audio du jour :</p>
+  <iframe 
+  width="100%" 
+  height="166" 
+  scrolling="no" 
+  frameborder="no" 
+  src="https://w.soundcloud.com/player/?url=https://soundcloud.com/marcel-eloundou/07-juin?si=1b91125b4bb3404d9f4d8b155b6ef1cd&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing">
+</iframe>
+  </div>
+
+<script>
+  // Fonction pour charger les composants
+  function loadComponents() {
+    // Charge la navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('afterbegin', data);
+        // Après chargement du menu, charge le footer
+        return fetch('footer.html');
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('beforeend', data);
+      })
+      .catch(error => {
+        console.error('Erreur de chargement des composants:', error);
+        document.body.innerHTML += '<p style="color:red">Erreur de chargement des éléments</p>';
+      });
+  }
+
+  // Appel initial
+  document.addEventListener('DOMContentLoaded', loadComponents);
+</script>
+</body>
+</html>

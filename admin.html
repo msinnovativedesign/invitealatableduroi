@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin - Table du ROI</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!-- Navbar chargée dynamiquement -->
+
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1><i class="fas fa-user-shield"></i> Administration</h1>
+      <button id="logoutBtn">Déconnexion</button>
+    </div>
+
+    <div class="admin-grid">
+      <section class="admin-card">
+        <h2><i class="fas fa-plus-circle"></i> Ajouter un contenu</h2>
+        <form id="contentForm">
+          <!-- Vos champs existants... -->
+          <button type="submit"><i class="fas fa-save"></i> Publier</button>
+        </form>
+      </section>
+
+      <section class="admin-card">
+        <h2><i class="fas fa-list"></i> Contenus existants</h2>
+        <div id="contentList">
+          <!-- Liste générée par JS -->
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Vérification d'accès améliorée
+    const ADMIN_PASSWORD = "mdp"; // À changer et externaliser
+    
+    function checkAuth() {
+      const storedAuth = localStorage.getItem('adminAuthToken');
+      if (!storedAuth || atob(storedAuth) !== ADMIN_PASSWORD) {
+        window.location.href = 'unauthorized.html';
+      }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('adminAuthToken');
+      window.location.href = 'index.html';
+    });
+
+    // Premier chargement
+    if (!location.hash.includes('auth')) {
+      const entered = prompt("Mot de passe administrateur :");
+      if (entered === ADMIN_PASSWORD) {
+        localStorage.setItem('adminAuthToken', btoa(entered));
+        location.hash = 'auth=true';
+      } else {
+        alert('Accès refusé');
+        window.location.href = 'index.html';
+      }
+    }
+
+    checkAuth();
+  </script>
+  <script>
+  // Fonction pour charger les composants
+  function loadComponents() {
+    // Charge la navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('afterbegin', data);
+        // Après chargement du menu, charge le footer
+        return fetch('footer.html');
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('beforeend', data);
+      })
+      .catch(error => {
+        console.error('Erreur de chargement des composants:', error);
+        document.body.innerHTML += '<p style="color:red">Erreur de chargement des éléments</p>';
+      });
+  }
+
+  // Appel initial
+  document.addEventListener('DOMContentLoaded', loadComponents);
+</script>
+</body>
+</html>
