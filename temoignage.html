@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Votre témoignage</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navbar chargée via JS -->
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', loadComponents);
+  </script>
+
+  <!-- Contenu principal -->
+  <div class="form-container">
+    <h2>Partagez votre témoignage</h2>
+    <p>Nous serions bénis d’entendre ce que Dieu a fait dans votre vie.</p>
+
+    <form id="temoignageForm">
+      <div class="form-group">
+        <label for="nom">Votre nom *</label>
+        <input type="text" id="nom" name="nom" required />
+      </div>
+
+      <div class="form-group">
+        <label for="temoignage">Votre témoignage *</label>
+        <textarea id="temoignage" name="temoignage" required></textarea>
+      </div>
+
+      <button type="submit" class="submit-button">Envoyer</button>
+    </form>
+
+    <div id="responseMessage" class="form-message form-success" style="display: none;">
+      Merci pour votre témoignage !
+    </div>
+  </div>
+
+  <!-- Footer chargé via JS -->
+   <script>
+  // Fonction pour charger les composants
+  function loadComponents() {
+    // Charge la navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('afterbegin', data);
+        // Après chargement du menu, charge le footer
+        return fetch('footer.html');
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('beforeend', data);
+      })
+      .catch(error => {
+        console.error('Erreur de chargement des composants:', error);
+        document.body.innerHTML += '<p style="color:red">Erreur de chargement des éléments</p>';
+      });
+  }
+
+  // Appel initial
+  document.addEventListener('DOMContentLoaded', loadComponents);
+</script>
+</body>
+</html>

@@ -79,5 +79,78 @@ document.getElementById("contentForm").addEventListener("submit", function (e) {
     });
 });
 // Sur chaque page :
-const currentPage = window.location.pathname.split('/').pop();
-document.querySelector(`.navbar a[href="${currentPage}"]`).classList.add('active');
+// (Supprimé car la déclaration de currentPage existe plus bas avec une valeur par défaut)
+document.querySelector(`.navbar a[href="${window.location.pathname.split('/').pop()}"]`).classList.add('active');
+
+// pour le menu mobile
+
+document.getElementById("contentForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const dateInput = document.getElementById("date").value; // Renommé pour éviter la confusion avec la variable date globale
+  const type = document.getElementById("type").value;
+  const title = document.getElementById("title").value;
+  const url = document.getElementById("url").value;
+  const content = document.getElementById("content").value; // Renommé pour éviter la confusion
+
+  const newEntry = { [dateInput]: { type, title } };
+
+  if (type === "audio" || type === "video") {
+    newEntry[dateInput].url = url;
+  } else {
+    newEntry[dateInput].content = content;
+  }
+
+  fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+      const updatedData = { ...data, ...newEntry };
+      const formattedJson = JSON.stringify(updatedData, null, 2);
+      document.getElementById("output").textContent = formattedJson;
+
+      // Ici, vous pouvez sauvegarder manuellement ou utiliser un backend plus tard
+    });
+});
+
+// Sur chaque page :
+const currentPage = window.location.pathname.split('/').pop() || 'index.html'; // Assurer une valeur par défaut
+const navLinks = document.querySelectorAll('.navbar ul li a');
+navLinks.forEach(link => {
+  if (link.getAttribute('href') === currentPage) {
+    link.classList.add('active');
+  }
+});
+
+// Gestion du menu burger
+document.addEventListener('DOMContentLoaded', () => {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const navUl = document.querySelector('.navbar ul');
+
+  if (menuToggle && navUl) {
+    menuToggle.addEventListener('click', () => {
+      navUl.classList.toggle('active');
+    });
+  }
+});
+
+// Fonction générique pour gérer les soumissions de formulaires
+function setupForm(formId, successMessage) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    // Ici, on pourrait envoyer les données à Google Forms ou API plus tard
+    const responseDiv = document.getElementById("responseMessage");
+    responseDiv.style.display = "block";
+    responseDiv.textContent = successMessage;
+    form.reset();
+  });
+}
+
+// Activer les gestionnaires de formulaires
+document.addEventListener("DOMContentLoaded", function () {
+  setupForm("inscriptionForm", "Merci ! Votre inscription a été envoyée.");
+  setupForm("priereForm", "Merci ! Votre intention a été reçue.");
+  setupForm("temoignageForm", "Merci pour votre témoignage !");
+});

@@ -8,16 +8,21 @@
 <body>
 
 
-  <div class="container">
-    <h2>Le Pain Quotidien</h2>
-    <p>Lecture audio du jour :</p>
-  <iframe 
-  width="100%" 
-  height="166" 
-  scrolling="no" 
-  frameborder="no" 
-  src="https://w.soundcloud.com/player/?url=https://soundcloud.com/marcel-eloundou/07-juin?si=1b91125b4bb3404d9f4d8b155b6ef1cd&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing">
-</iframe>
+<div class="container">
+  <h2>Déclarations Prophétiques</h2>
+  <p>Déclaration du jour :</p>
+  
+  <!-- Lecteur vidéo standard -->
+  <video controls style="width: 100%; border-radius: 8px;">
+    <source src="/Déclaration prophétique du 14 juin 2025.mp4" type="video/mp4">
+    Votre navigateur ne supporte pas l'élément vidéo.
+  </video>
+  
+  <p>Par Chantre Marie Esther</p>
+</div>
+  
+</div>
+
   </div>
 
 <script>
@@ -44,5 +49,32 @@
   // Appel initial
   document.addEventListener('DOMContentLoaded', loadComponents);
 </script>
+<script>
+    const dailyContent = JSON.parse(localStorage.getItem("dailyContent") || "{}");
+    const today = new Date().toISOString().split("T")[0];
+    const contentDiv = document.getElementById("daily-content");
+
+    if (dailyContent[today]) {
+      const entry = dailyContent[today];
+      contentDiv.innerHTML = `<h3>${entry.title}</h3>`;
+      
+      if (entry.content) {
+        contentDiv.innerHTML += `<p>${entry.content}</p>`;
+      }
+
+      if (entry.audio) {
+        contentDiv.innerHTML += `
+          <p><strong>Écoutez la lecture :</strong></p>
+          <audio controls>
+            <source src="${entry.audio}" type="audio/mp3" />
+            Votre navigateur ne supporte pas l'audio.
+          </audio>
+        `;
+      }
+
+    } else {
+      contentDiv.innerHTML = "<p>Aucun pain quotidien disponible aujourd'hui.</p>";
+    }
+  </script>
 </body>
 </html>

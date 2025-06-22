@@ -39,5 +39,22 @@
   // Appel initial
   document.addEventListener('DOMContentLoaded', loadComponents);
 </script>
+<script>
+    // Charger le contenu depuis localStorage
+    const adorationContent = JSON.parse(localStorage.getItem("adorationContent") || "{}");
+    const today = new Date().toISOString().split("T")[0];
+
+    const contentDiv = document.getElementById("daily-content");
+
+    if (adorationContent[today]) {
+      const entry = adorationContent[today];
+      contentDiv.innerHTML = `
+        <h3>${entry.title}</h3>
+        <iframe width="100%" height="315" src="${entry.video}" frameborder="0" allowfullscreen></iframe>
+      `;
+    } else {
+      contentDiv.innerHTML = "<p>Aucune vidéo disponible aujourd'hui.</p>";
+    }
+  </script>
 </body>
 </html>

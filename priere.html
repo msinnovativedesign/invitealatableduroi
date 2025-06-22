@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Intention de prière</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navbar chargée via JS -->
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', loadComponents);
+  </script>
+
+  <!-- Contenu principal -->
+  <div class="form-container">
+    <h2>Vos intentions de prière</h2>
+    <p>Partagez vos intentions. Nous prierons pour vous.</p>
+
+    <form id="priereForm">
+      <div class="form-group">
+        <label for="nom">Votre nom</label>
+        <input type="text" id="nom" name="nom" />
+      </div>
+
+      <div class="form-group">
+        <label for="intention">Votre intention de prière *</label>
+        <textarea id="intention" name="intention" required></textarea>
+      </div>
+
+      <button type="submit" class="submit-button">Soumettre</button>
+    </form>
+
+    <div id="responseMessage" class="form-message form-success" style="display: none;">
+      Merci ! Votre intention a été reçue.
+    </div>
+  </div>
+
+  <!-- Footer chargé via JS -->
+   <script>
+  // Fonction pour charger les composants
+  function loadComponents() {
+    // Charge la navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('afterbegin', data);
+        // Après chargement du menu, charge le footer
+        return fetch('footer.html');
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('beforeend', data);
+      })
+      .catch(error => {
+        console.error('Erreur de chargement des composants:', error);
+        document.body.innerHTML += '<p style="color:red">Erreur de chargement des éléments</p>';
+      });
+  }
+
+  // Appel initial
+  document.addEventListener('DOMContentLoaded', loadComponents);
+</script>
+</body>
+</html>

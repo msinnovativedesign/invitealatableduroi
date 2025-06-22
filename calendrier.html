@@ -2,33 +2,69 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calendrier Spirituel</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"  />
 </head>
 <body>
-  <!-- Navbar chargée dynamiquement -->
+
+  <!-- Navbar chargée via JS -->
+  <script src="script.js"></script>
 
   <div class="calendar-container">
+
+    <!-- En-tête -->
     <div class="calendar-header">
-      <h1><i class="fas fa-calendar-alt"></i> Évènements à venir </h1>
-      <div class="calendar-actions">
-        <button id="addEventBtn"><i class="fas fa-plus"></i> Ajouter un événement</button>
+      <h1><i class="fas fa-calendar-alt calendar-icon"></i> 
+        <span class="header-title">Évènements à venir</span></h1>
+    </div>
+
+    <!-- Bouton visible pour tous, mais protégé par mot de passe -->
+    <div class="calendar-actions">
+      <button id="addEventBtn"><i class="fas fa-plus"></i> Ajouter un événement</button>
+    </div>
+
+    
+
+    <!-- Modal d'ajout d'événement -->
+    <div class="modal" id="eventModal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Nouvel Événement</h2>
+        <form id="eventForm">
+          <div class="form-group">
+            <label for="eventTitle">Titre *</label>
+            <input type="text" id="eventTitle" required />
+          </div>
+          <div class="form-group">
+            <label for="eventDate">Date *</label>
+            <input type="date" id="eventDate" required />
+          </div>
+          <div class="form-group">
+            <label for="eventTime">Heure</label>
+            <input type="time" id="eventTime" />
+          </div>
+          <div class="form-group">
+            <label for="eventDescription">Description</label>
+            <textarea id="eventDescription" rows="3"></textarea>
+          </div>
+          <button type="submit">Enregistrer</button>
+        </form>
       </div>
     </div>
 
+    <!-- Vue calendrier -->
     <div class="calendar-view">
-      <!-- Section Mois/Année -->
       <div class="month-selector">
         <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
         <h2 id="currentMonth">Avril 2025</h2>
         <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
       </div>
 
-      <!-- Calendrier visuel -->
+      <!-- Grille du calendrier -->
       <div class="calendar-grid" id="calendarGrid">
-        <!-- Généré dynamiquement par JavaScript -->
+        <!-- Généré dynamiquement -->
       </div>
     </div>
 
@@ -36,40 +72,14 @@
     <div class="events-section">
       <h2><i class="fas fa-list-ul"></i> Événements à venir</h2>
       <div class="events-list" id="eventsList">
-        <!-- Événements chargés dynamiquement -->
+        <!-- Chargé dynamiquement -->
       </div>
     </div>
+
+    <!-- Footer chargé via JS -->
   </div>
 
-  <!-- Modal pour ajouter un événement -->
-  <div class="modal" id="eventModal">
-    <div class="modal-content">
-      <span class="close-btn">&times;</span>
-      <h2>Nouvel Événement</h2>
-      <form id="eventForm">
-        <div class="form-group">
-          <label for="eventTitle">Titre :</label>
-          <input type="text" id="eventTitle" required>
-        </div>
-        <div class="form-group">
-          <label for="eventDate">Date :</label>
-          <input type="date" id="eventDate" required>
-        </div>
-        <div class="form-group">
-          <label for="eventTime">Heure :</label>
-          <input type="time" id="eventTime">
-        </div>
-        <div class="form-group">
-          <label for="eventDescription">Description :</label>
-          <textarea id="eventDescription" rows="3"></textarea>
-        </div>
-        <button type="submit">Enregistrer</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Footer chargé dynamiquement -->
-
+  <!-- Scripts -->
   <script>
     // Fonction pour charger les composants
     function loadComponents() {
@@ -83,29 +93,35 @@
         initializeCalendar();
       })
       .catch(error => {
-        console.error('Erreur:', error);
-        document.body.innerHTML += '<p class="error">Problème de chargement</p>';
+        console.error('Erreur lors du chargement des composants :', error);
+        document.body.innerHTML += '<p class="error">Erreur de chargement</p>';
       });
     }
-
-    // Initialisation du calendrier
-    function initializeCalendar() {
-      // Données des événements (peut être remplacé par un appel API)
-      const events = [
-        { id: 1, title: "Jeûne et prière", date: "2025-04-05", time: "08:00", description: "Journée de jeûne collectif" },
-        { id: 2, title: "Rencontre jeunesse", date: "2025-04-12", time: "18:30", description: "Soirée spéciale pour les jeunes" },
-        { id: 3, title: "Louange & Adoration", date: "2025-04-19", time: "19:00", description: "Soirée de louange" },
-        { id: 4, title: "Étude biblique", date: "2025-04-26", time: "10:00", description: "Étude de la parole" }
-      ];
-
-      // Fonctions pour gérer le calendrier...
-      // (Le code complet est fourni ci-dessous)
-    }
-
-    document.addEventListener('DOMContentLoaded', loadComponents);
   </script>
 
-  <!-- Code JavaScript complet pour le calendrier -->
+  <!-- Script principal du calendrier -->
   <script src="calendar.js"></script>
+
+  <!-- Script pour DOMContentLoaded -->
+  <script>
+    document.addEventListener('DOMContentLoaded', loadComponents);
+  </script>
+  <script>
+    const calendarEvents = JSON.parse(localStorage.getItem("calendarEvents") || "[]");
+    const eventsList = document.getElementById("eventsList");
+
+    if (calendarEvents.length > 0) {
+      eventsList.innerHTML = ""; // Vide le message par défaut
+      calendarEvents.forEach(event => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${event.title}</strong><br/>
+          <small>${event.date} ${event.time ? "à " + event.time : ""}</small><br/>
+          <em>${event.description || ""}</em>
+        `;
+        eventsList.appendChild(li);
+      });
+    }
+  </script>
 </body>
 </html>

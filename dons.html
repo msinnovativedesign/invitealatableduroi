@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Faire un don</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+ 
+
+  <div class="container">
+    <h2>Faire un don</h2>
+    <p>Nous vous remercions de votre générosité ! Vous pouvez faire un don via PayPal, carte bancaire ou virement.</p>
+
+    <h3>Options de don</h3>
+    <ul>
+      <li>Par carte bancaire : [Bouton PayFast / Stripe]</li>
+      <li>Par PayPal : <a href="#">Faire un don via PayPal</a></li>
+      <li>Par virement bancaire : coordonnées disponibles sur demande</li>
+    </ul>
+  </div>
+  <script>
+  // Fonction pour charger les composants
+  function loadComponents() {
+    // Charge la navbar
+    fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('afterbegin', data);
+        // Après chargement du menu, charge le footer
+        return fetch('footer.html');
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.body.insertAdjacentHTML('beforeend', data);
+      })
+      .catch(error => {
+        console.error('Erreur de chargement des composants:', error);
+        document.body.innerHTML += '<p style="color:red">Erreur de chargement des éléments</p>';
+      });
+  }
+
+  // Appel initial
+  document.addEventListener('DOMContentLoaded', loadComponents);
+</script>
+</body>
+</html>

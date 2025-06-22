@@ -2,67 +2,122 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin - Table du ROI</title>
+  <title>Interface Admin - Table du Roi</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"  />
 </head>
 <body>
-  <!-- Navbar chargée dynamiquement -->
+
+  <!-- Navbar chargée via JS -->
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', loadComponents);
+  </script>
 
   <div class="admin-container">
-    <div class="admin-header">
-      <h1><i class="fas fa-user-shield"></i> Administration</h1>
-      <button id="logoutBtn">Déconnexion</button>
-    </div>
+    <h2><i class="fas fa-tools"></i> Interface d'Administration</h2>
 
-    <div class="admin-grid">
-      <section class="admin-card">
-        <h2><i class="fas fa-plus-circle"></i> Ajouter un contenu</h2>
-        <form id="contentForm">
-          <!-- Vos champs existants... -->
-          <button type="submit"><i class="fas fa-save"></i> Publier</button>
-        </form>
-      </section>
+    <!-- Menu rapide -->
+    <nav class="admin-menu">
+      <ul>
+        <li><a href="#" onclick="showSection('daily')">Le Pain Quotidien</a></li>
+        <li><a href="#" onclick="showSection('adoration')">Adoration</a></li>
+        <li><a href="#" onclick="showSection('louange')">Louange</a></li>
+        <li><a href="#" onclick="showSection('calendar')">Calendrier</a></li>
+        <li><a href="#" onclick="showSection('archives')">Archives</a></li>
+      </ul>
+    </nav>
 
-      <section class="admin-card">
-        <h2><i class="fas fa-list"></i> Contenus existants</h2>
-        <div id="contentList">
-          <!-- Liste générée par JS -->
-        </div>
-      </section>
-    </div>
+    <!-- Section : Formulaire Pain Quotidien -->
+    <section id="daily" class="admin-section active">
+      <h3>Ajouter un nouveau Pain Quotidien</h3>
+      <form id="dailyForm" class="admin-form">
+        <label for="dailyDate">Date *</label>
+        <input type="date" id="dailyDate" required />
+
+        <label for="dailyTitle">Titre</label>
+        <input type="text" id="dailyTitle" />
+
+        <label for="dailyContent">Contenu</label>
+        <textarea id="dailyContent" rows="4"></textarea>
+
+        <label for="dailyAudio">Lien audio (MP3)</label>
+        <input type="url" id="dailyAudio" />
+
+        <button type="submit">Enregistrer</button>
+      </form>
+    </section>
+
+    <!-- Section : Formulaire Adoration -->
+    <section id="adoration" class="admin-section hidden">
+      <h3>Ajouter une nouvelle vidéo d’adoration</h3>
+      <form id="adorationForm" class="admin-form">
+        <label for="adorationDate">Date *</label>
+        <input type="date" id="adorationDate" required />
+
+        <label for="adorationTitle">Titre</label>
+        <input type="text" id="adorationTitle" />
+
+        <label for="adorationVideo">Lien YouTube (iframe)</label>
+        <input type="text" id="adorationVideo" placeholder="ex: https://www.youtube.com/embed/VIDEO_ID"  />
+
+        <button type="submit">Enregistrer</button>
+      </form>
+    </section>
+
+    <!-- Section : Formulaire Louange -->
+    <section id="louange" class="admin-section hidden">
+      <h3>Ajouter un contenu de louange</h3>
+      <form id="louangeForm" class="admin-form">
+        <label for="louangeDate">Date *</label>
+        <input type="date" id="louangeDate" required />
+
+        <label for="louangeTitle">Titre</label>
+        <input type="text" id="louangeTitle" />
+
+        <label for="louangeVideo">Lien vidéo YouTube</label>
+        <input type="url" id="louangeVideo" />
+
+        <label for="louangeAudio">Lien audio MP3</label>
+        <input type="url" id="louangeAudio" />
+
+        <button type="submit">Enregistrer</button>
+      </form>
+    </section>
+
+    <!-- Section : Calendrier -->
+    <section id="calendar" class="admin-section hidden">
+      <h3>Ajouter un événement</h3>
+      <form id="calendarForm" class="admin-form">
+        <label for="eventDate">Date *</label>
+        <input type="date" id="eventDate" required />
+
+        <label for="eventTitle">Titre</label>
+        <input type="text" id="eventTitle" />
+
+        <label for="eventTime">Heure</label>
+        <input type="time" id="eventTime" />
+
+        <label for="eventDescription">Description</label>
+        <textarea id="eventDescription" rows="3"></textarea>
+
+        <button type="submit">Enregistrer</button>
+      </form>
+    </section>
+
+    <!-- Section Archives -->
+    <section id="archives" class="admin-section hidden">
+      <h3>Archives</h3>
+      <div id="archiveList">
+        <p>Les contenus archivés apparaîtront ici.</p>
+      </div>
+    </section>
   </div>
 
-  <script>
-    // Vérification d'accès améliorée
-    const ADMIN_PASSWORD = "mdp"; // À changer et externaliser
-    
-    function checkAuth() {
-      const storedAuth = localStorage.getItem('adminAuthToken');
-      if (!storedAuth || atob(storedAuth) !== ADMIN_PASSWORD) {
-        window.location.href = 'unauthorized.html';
-      }
-    }
+  <!-- Footer chargé via JS -->
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('adminAuthToken');
-      window.location.href = 'index.html';
-    });
-
-    // Premier chargement
-    if (!location.hash.includes('auth')) {
-      const entered = prompt("Mot de passe administrateur :");
-      if (entered === ADMIN_PASSWORD) {
-        localStorage.setItem('adminAuthToken', btoa(entered));
-        location.hash = 'auth=true';
-      } else {
-        alert('Accès refusé');
-        window.location.href = 'index.html';
-      }
-    }
-
-    checkAuth();
-  </script>
+  <!-- Script principal -->
+  <script src="admin.js"></script>
   <script>
   // Fonction pour charger les composants
   function loadComponents() {
